@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Power Up's</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #111; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+    #gate {
+      text-align: center;
+      padding: 2rem;
+      max-width: 400px;
+      width: 100%;
+    }
+    #gate h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    #gate p { color: #aaa; margin-bottom: 1.5rem; }
+    #gate input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #222;
+      color: #fff;
+      margin-bottom: 1rem;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+    #gate button {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      background: #e63946;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    #gate button:hover { background: #c1121f; }
+    #error { color: #e63946; margin-top: 1rem; font-size: 0.9rem; min-height: 1.2rem; }
+
+    #used-screen {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      max-width: 400px;
+    }
+    #used-screen h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    #used-screen p { color: #aaa; }
+
+    #game-container {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+    }
+    #game-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="gate">
+    <h1>⚡ Power Up's</h1>
+    <p>Introduce tu código de acceso</p>
+    <input type="text" id="token-input" placeholder="Tu código" autocomplete="off" />
+    <button onclick="checkToken()">Entrar</button>
+    <div id="error"></div>
+  </div>
+
+  <div id="used-screen">
+    <h1>⚡ Power Up's</h1>
+    <p>Ya has abierto tus Power Up's</p>
+  </div>
+
+  <div id="game-container">
+    <iframe id="game-frame" src="game/index.html" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    const TOKENS = {"MBLutLC9": false, "RYhgA09T": false, "AZbv7uMK": false, "wlSWnWRy": false, "SERad851": false, "90lXFUVC": false, "50bw86hg": false, "Bi6EMJ1f": false, "GznEPLNS": false, "d24krMRa": false, "6R3oO0l9": false, "WpSFeziq": false, "CvMRHecK": false, "HanEvI8Y": false, "PyJXWMKF": false, "E6dhz1wz": false, "PUbUwp63": false, "xFdA1yHG": false, "l4i4Ly75": false, "905N5zOt": false, "JJ7ChkDp": false, "cqvyDDFK": false, "cTqQZFwA": false, "JfRqpWny": false, "AxJp1nka": false, "c0wpaBs6": false, "D9ftwGhe": false, "Pvyc6XUx": false, "fnCMRW9J": false, "doHEHWV2": false, "L0WnPZrZ": false, "mB8D6VVY": false, "1eIqnzPw": false, "raaHBdKV": false, "xxVmFy4W": false, "PtwDDWxN": false, "DWsddG0T": false, "oXytvC6M": false, "R3ny2hUl": false, "Vkn6mTHV": false, "kUclcO77": false, "qUKotZCJ": false, "VUks7vgk": false, "cGWUFxyu": false, "BUqLxFka": false, "EKMaKMAC": false, "ZDogaMvl": false, "RQNvUeFJ": false, "jONHHaIT": false, "m3Fc1kPx": false, "IbHCZCGi": false, "lPwYIqu9": false, "t2I8L6Ns": false, "gF9eSJD9": false, "ULKwuyRO": false, "Agw9Ji7c": false, "VwpTvr76": false, "mnbH4F0D": false, "VNyQjsKc": false, "0CjNjK1A": false, "lLHJpJHH": false, "IyG7TvTm": false, "R75nBEfO": false, "xM5cIunY": false, "e8EI9OTZ": false, "0kD8tqXT": false, "JRqcOJcD": false, "Z4s9rpTf": false, "53EN6ggr": false, "CKnR4GOQ": false, "k7EewQBQ": false, "qc7l6Cf4": false, "xkwAMPUW": false, "KhcHvaQo": false, "CJAQMP9Z": false, "DF8NCwIL": false, "oyLJDa4v": false, "1HpF8urV": false, "FSQuzpqZ": false, "3dGx38u4": false, "zbwIDmuz": false, "wLzsrijJ": false, "dvUy1QRK": false, "IssrWDBi": false, "SLa5GgMm": false, "QURjYlN3": false, "B6m8Uljv": false, "OvH6r1QB": false, "MC851AYI": false, "JniGqoj4": false, "AamaVKUS": false, "B3pUcFyo": false, "ILmRF7wR": false, "d1V2fQJL": false, "4puemQqv": false, "SqVD6BgT": false, "qOwG99Uf": false, "SaMXDGuL": false, "ZK835z7z": false, "nzYI2PTT": false, "rGcgGAiP": false, "yqGgZBBt": false, "dPfrokUI": false, "ERiVbUoC": false, "K1Gw8c1R": false, "C11A6YxI": false, "AoFsSgNi": false, "zO8CF0Xz": false, "dUsuspMH": false, "mL0f9X6T": false, "CTZAp9uN": false, "0jaeQe5s": false, "VxAvsOqM": false, "h2rv7emG": false, "PLAv93Oh": false, "4B6sHKR0": false, "XRA9bZJ1": false, "eHus99qf": false, "Dfsz7lK2": false, "2nIScnER": false, "RgLJwBEZ": false, "nuW653cX": false, "ZcAIrXEq": false, "Wia0t6M0": false, "OxXeGA35": false, "soIIfvgJ": false, "JAWcb5Ec": false, "BbOyiZEq": false, "cOfPjxEu": false, "mi0G1FhW": false, "aGmqOcDB": false, "9gDEeqYL": false, "Zg6Pzzjn": false, "CTLQwQhV": false, "vRSpHR44": false, "QM8JjfqX": false, "Ofv09aIU": false, "6cbd4EsK": false, "TExOMonP": false, "M0u42IMF": false, "LF0vNub3": false, "Bw4xYeut": false, "JAi7qZ1o": false, "3bZkdJ3r": false, "fxGY8LNE": false, "OJ9HLsga": false, "cvwXj7M9": false, "JDL4R7L5": false, "a7OA5K0j": false, "AgZZfqFm": false, "k8F5RqDT": false, "KyXZDfjR": false, "7IPVjZyk": false, "twgxudJQ": false, "ybtMsUYi": false, "8wFJB8iE": false, "G7DZXKTo": false, "PhKUHEMc": false, "dzcKObZX": false, "08Jc2HHb": false, "FRwKxeiX": false, "EtqyGnAN": false, "DktTjYHS": false, "cg14ZXa6": false, "1gz6keRe": false, "KAcb1sVk": false, "O9FVAoJk": false, "Z8nCxlPe": false, "Ce1J3tpZ": false, "NvuFhny7": false, "TxlaVUt4": false, "Auew4YKo": false, "QbQMrUno": false, "x15jDAGp": false, "eTpK0p8D": false, "EkqVvYNF": false, "S3GnZQ0N": false, "Sln7mFq3": false, "4HdPcxVs": false, "q5o87HMS": false, "Iagbe1y9": false, "nzPi1hys": false, "QjhKSgQ6": false, "aQfnwKLV": false, "Z7u5ilRL": false, "2zftyJMq": false, "BTGmGxNd": false, "VHzt0lzd": false, "O2fx7doH": false, "3khO4zCH": false, "curvzjUI": false, "tcT4VuOm": false, "VJJHnujZ": false, "dC1CzEAd": false, "6fzxm9RO": false, "RjCAyl8D": false, "AiDru4Bj": false, "bSrU89Dd": false, "A0w4q9VM": false, "uZFGoj4b": false, "QBRBIeF5": false, "qN9Pit8n": false, "axhvjplA": false, "9vzT0pl6": false, "mvOKLlBZ": false, "9ylUi7fo": false, "ibDbTrLq": false, "deLFPQRD": false, "brPVsLv1": false, "Rt5x6tn6": false, "oymiTUZB": false, "Wj0kX8lQ": false, "YpvKXJwC": false, "Mt97ndfL": false, "nQHp8tLF": false, "XLwycGDS": false, "GgSeJ0Hm": false, "B6GccXYU": false, "yEV3TYxe": false, "qNNlzT0p": false, "EsYsbONf": false, "YRefb0jf": false, "ZOFhJ4HX": false, "c44TZiEi": false, "qnUasD9X": false, "eeWQFKCs": false, "Ep7vESgt": false, "i9WOgjYX": false, "S5CUfZTe": false, "0muguCNs": false, "7806RntN": false, "JWjCIm3i": false, "kNmgJojs": false, "G9jWdbhS": false, "wCiNWJHO": false, "52xkicME": false, "lRZAHkji": false, "TjeCgevo": false, "2agEcVdY": false, "lk5FwpOr": false, "cjT0CVaL": false, "ZUyRTEBT": false, "KWARG2Uv": false, "dBtcdQTt": false, "nUU415OT": false, "32qKLScq": false, "vFwHAciv": false, "LReBdVHh": false, "xqjrYOB1": false, "K3IbOnvC": false, "AqQMI7gI": false, "2aUZlsZW": false, "JwDgd2l2": false, "umHHNTpW": false, "JwcANS6h": false, "ZoCtbDxI": false, "mG54rkqA": false, "GCJD0xdr": false, "2Jvpqzz2": false, "nuYju7p5": false, "nOSpz6qX": false, "NVxvRfr6": false, "rl4EZkTi": false, "q9k72XLe": false, "8bOehwjo": false, "oGa2rKAu": false, "cTh1XSPF": false, "J5fj9rsy": false, "esVYXgNd": false, "WbqyNrbz": false, "nVekagFa": false, "pfxdbVoG": false, "6M9bHuyU": false, "4usiH6so": false, "oOlyqohR": false, "Mf6B5K7Y": false, "LKxmHLp9": false, "BoOgaczA": false, "0lkiWgWB": false, "LyO9ODqe": false, "TFsZvlFF": false, "YeoC7VAk": false, "VTMYIaC0": false, "oaOzwGIZ": false, "1VQO7aaF": false, "fSfOi2fL": false, "9sttntOO": false, "h74iOoF0": false, "wqXeZ2kv": false, "IwtKN8Ta": false, "SOHkENRN": false, "SsNBFCBL": false, "UWDWOZXL": false, "uAUy1ioV": false, "hp3GmqXm": false, "Iwwc6nT6": false, "Yp4WHzjv": false, "dgZjAcv0": false, "V5fchuOy": false, "fIMqwSgL": false, "6E28TKOV": false, "2BleVXbi": false, "fKORRJe6": false, "XjRSMaS4": false, "vu6stQiC": false, "F9HJnxXW": false, "u73Kpk2k": false, "rSIlBhvM": false, "XCvzH1d6": false, "Iizu740k": false, "pCQjWhVh": false, "zClqXq08": false, "840sAT55": false, "cklBIffw": false, "ndgwRYRl": false, "m1ltjlMl": false, "8hve1MRz": false, "snmXjyaP": false, "g0pF39PB": false, "1iRFxddV": false, "ZDXWdXiY": false, "NF5e3Nba": false, "HEkOtAY9": false, "8tc1DUKG": false, "LIYNJbbe": false, "JTzy0jlY": false, "AAZRo3Yk": false, "i9ylb0dH": false, "gJY9TCx5": false, "ToTUUOjU": false, "1dlVpsku": false, "VjNjJxEY": false, "hguRozMf": false, "OFkLOPmM": false, "4MVhs7fn": false, "VStHXdTx": false, "PLVZWsCt": false, "pXi9oTNv": false, "Y6tm8irp": false, "cw7LGlLG": false, "Xd9raJlp": false, "UHiSiYdK": false, "RxH9RhHs": false, "fqfO7nPE": false, "WJiGz8Hl": false, "oA6sqIfW": false, "FkJZ66EH": false, "HMmMksz9": false, "atV0r66W": false, "O6xmdLl3": false, "ukSjOw1i": false, "uVyXW8o7": false, "5XNn6AOS": false, "Mg6wgkqt": false, "H79vJg75": false, "ne3AtWal": false, "UvhcyNVk": false, "18xi4qtD": false, "5s31B6HI": false, "DfpLLRge": false, "peAh01Ma": false, "TNslfDCm": false, "NN3i1Nb6": false, "ydImtGEb": false, "orxXS1bM": false, "K7B9eN5A": false, "Yw6wNj8O": false, "KEDBjz20": false, "bEek9sZB": false, "Qk3rWwKj": false, "BCQyRc2I": false, "EDnHt0Oj": false, "TxbfOgJN": false, "CzOSVdYp": false, "aVOsBTWC": false, "L9ntJkaM": false, "HPtrQQRE": false, "YTwdBsT1": false, "vK3oUh1N": false, "v6INxhc0": false, "5aK6fuhM": false, "LZLTUTdM": false, "rEgLK74K": false, "QInIc7GP": false, "VPnDTxaN": false, "6DJmHhFN": false, "saQ3Pp5G": false, "g14Qs0n1": false, "cQ9aDUKE": false, "w7M6hYPH": false, "DT1wADMU": false, "HS90KIiB": false, "LUSlusbj": false, "UFrD47FL": false, "nMlcFxWh": false, "UbpNL1AO": false, "Ya38Lprj": false, "DYkRrajt": false, "0YuGSQQt": false, "jgdDBgHh": false, "QU0QTGz2": false, "bAnnmf0f": false, "CNyBlQXu": false, "AhfnlFVv": false, "rIjwcjBD": false, "FTHC3IH5": false, "DnJ48NEL": false, "KG9NGtZM": false, "tkFzUrvV": false, "XgeO0r8d": false, "uHl7yUcD": false, "y0Fz6uw5": false, "jh5RLqx8": false, "Grcx2V4B": false, "PCTxh3Cv": false, "1PTcUoWd": false, "0mCvIP4x": false, "4uJ4E7MW": false, "ICSTIm3M": false, "et3rxu3V": false, "Kw5dAYIe": false, "dLYrbOfw": false, "KoRY86Ly": false, "Pk1naKpg": false, "rceZAusn": false, "ofSNS4oG": false, "ZThiZzW9": false, "jRQSoKmc": false, "9FnCaVnG": false, "EHZT8ORl": false, "H7UOQm7B": false, "mUyaB7dS": false, "QoiTpY14": false, "knZuB9AH": false, "ZHzcmqMm": false, "AjnjrUU9": false, "8WZ7ubhh": false, "W9MuKDq3": false, "gyLb2xiG": false, "wnsAixzn": false, "Y3awk7ws": false, "vfTVZepn": false, "wQHTCIIz": false, "5Sf3zo83": false, "UocPuzcm": false, "jjH0U6Uc": false, "U6owmNtV": false, "BxY5WMQ3": false, "QeaJI0hd": false, "FMWcHTtN": false, "ulLrFZQL": false, "Cqu34YRF": false, "I2GYyGME": false, "0495fRVU": false, "TRsMqAtE": false, "9ELfcdlu": false, "3RnAuj9B": false, "9vmUpxx0": false, "FN4BlDhf": false, "3ZQBLyO1": false, "KksgzLbz": false, "fKMbHwE8": false, "J5Hg7BLQ": false, "NNBLA20w": false, "1i89DJL6": false, "fxFX6w9h": false, "rXFpxhBY": false, "V4RI5GOW": false, "AfCP61s2": false, "TDIsf8XK": false, "vQZqhK62": false, "XdrNQv5p": false, "k9IGxHVC": false, "FKFH6mck": false, "pMvnzIZK": false, "P8IC58S1": false, "bCdJjFuj": false, "r7T42IdH": false, "7gpUpmlI": false, "FYksxu1e": false, "1Nug8M8c": false, "i3sewzhA": false, "VN3mJE2W": false, "yh5BRsOu": false, "WlqhYukv": false, "FCNquQMO": false, "dF68QbPO": false, "l3ckm40M": false, "tF99HqB3": false, "4WAywgyt": false, "PvdIqRqO": false, "WBXhoHec": false, "8LVbzUmJ": false, "TiJrWNcx": false, "grYk5HQM": false, "zBi1U6X1": false, "A7bXLiuN": false, "XsaM7tpV": false, "D0je7Qab": false, "eN8FA64b": false, "NVgP1Sbt": false, "YIZgYkt4": false, "L39W9CRB": false, "02abocQU": false, "aiub52DT": false, "kV2K4Iqc": false, "tFj5pcCx": false, "x5ep7WsF": false, "KNiFGROG": false, "Nam7KILI": false, "BGUd7J8s": false, "ko5hocq7": false, "htg1PU9b": false, "lly19ZOu": false, "KLwIkg7X": false, "H1eVnsPJ": false, "KdjmSyv1": false, "yC9TRTq9": false, "aQetZc94": false, "qIGmBzaS": false, "DqVoO8z4": false, "8LZSz4ni": false, "wvo4g743": false, "kTtXyBPN": false, "VuadqP9i": false, "ksedyVK1": false, "fjpBbpMQ": false, "MiaZ8wSo": false, "CuvHKFiI": false, "Ng5eZ3vH": false, "7AqXZFdj": false, "oT5S5UzS": false, "4VdH3Lv0": false, "XWELFmJr": false, "MSXlbdNM": false, "QIRQ7TCL": false, "tNIyIfsn": false, "pf1ZxzJB": false, "EOkUQmUg": false, "21k5jfnK": false, "CJT43hm9": false, "Oamkjxey": false, "a9C1EH9n": false, "kbPuPj14": false, "sFvQ1I0d": false, "7o9vZ37p": false, "Vm1B1uXP": false, "p9aPaxjx": false, "wf6RyegB": false, "ckVx4mV4": false, "MpXpsyxG": false, "H4M3CJJ7": false, "nZJkqkgd": false, "8RMQ8ZHe": false, "XT2sPOXC": false, "IQbmw3uZ": false, "RijKXrFQ": false, "l1zU59hH": false, "cZ8VO5VR": false, "ZeRpAG4j": false, "FzK68IG0": false, "toi9Ep6t": false, "EaOdHkXd": false, "fhLDeZlG": false, "YmLL3OOq": false, "VbZP7JNy": false, "SwGWRGQQ": false, "0f8rg7Pe": false, "6TRqUolw": false, "HZGJzkbZ": false, "QPeJV2tj": false, "9bR9HEuB": false, "lGN11AEJ": false, "7HhQxiON": false, "wSIyYWR2": false, "NHAlDLHr": false, "daHwLg3w": false, "T02HUg78": false, "TbqnkE3p": false, "t1X5DL2r": false, "khBx7nro": false, "gbuV2MEV": false, "ttSfVphM": false, "A20uH7fz": false, "zU0pDd1T": false, "mptN0ocb": false, "w3mMnYOI": false, "DDcWAZaq": false, "dWlXUHPL": false, "ZDVLE0dw": false, "KxDbITIm": false, "BrKPUlnN": false, "rqb6ORvw": false, "TmyxZ7GU": false, "8XYmxCbj": false, "HD9TK7M7": false, "Gta0j37u": false, "NsIglqdZ": false, "PXCTvrLt": false, "cMgOa57w": false, "cbiG2TsZ": false, "9l74KCb8": false, "24NyPRLT": false, "rN0ImEjl": false, "87SM0MNz": false, "P1L6RC6n": false, "tjolf4Ee": false, "u6IP0nQi": false, "8SgL3hyb": false, "plhNDdj5": false, "KELq3wRM": false, "6BdCtc2N": false, "NphDSwhN": false, "sw4G6mWN": false, "RctzFqbR": false, "1wmPhDIr": false, "NGnsfKYJ": false, "FfTPA2CS": false, "17MW0hI9": false, "REL2oYsX": false, "pF9cleAk": false, "AXcccmvB": false, "u4hG2J1D": false, "NZQYfsb1": false, "LKZTMnCk": false, "rMPheYeh": false, "cDJNJQRD": false, "s0eNeS0H": false, "59LUL9CW": false, "4iaUjIWq": false, "0EV4PW6w": false, "7NIqSmJv": false, "qIuyhqqT": false, "pvweLVoL": false, "hyTr5Tiv": false, "PgdNVu9B": false, "Swxf9jTK": false, "JtmGiF9L": false, "IZ0pOG8j": false, "SXTQ4avh": false, "JekBcEnd": false, "WVfsM58k": false, "f6ic4q2q": false, "67rkEeId": false, "AnClrENE": false, "5ZoGiXFS": false, "zFIFnVJY": false, "r5d8AX6G": false, "RCIlvVgq": false, "AnDhwfAO": false, "3nEkvUJZ": false, "zvTfl8uP": false, "sgzAbtjZ": false, "2psFzEF4": false, "RmRLmsVe": false, "JBmM051X": false, "kv3vEO9c": false, "p1KKaKjk": false, "c6wAw9tT": false, "ZMd3qdpV": false, "0Omdi593": false, "alsYEkb5": false, "gRuK96d2": false, "XMaRFuaF": false, "aLXe47jf": false, "JsQhHIk8": false, "mcXzj6ct": false, "nHyM7MRW": false, "enYKNjU3": false, "qZa46Swy": false, "ZY6iJkfr": false, "9VmaZ1BS": false, "B66iIVEg": false, "VmMHwfMk": false, "Hz1m0Kuk": false, "z2R3uvO6": false, "V7uTq8hT": false, "doi0Fou5": false, "v79IqfjX": false, "b8dWj2BT": false, "LdI1jwJt": false, "Ex6GI1vG": false, "as3J8MHb": false, "KPhU2K7k": false, "mrwbBtJE": false, "mKXV3Psb": false, "zZCMJh9o": false, "RkZn9XQS": false, "PAKiBiG0": false, "i2ctJlQR": false, "iogg4AcF": false, "dWeMg11x": false, "wBQvhCPd": false, "lXv8t3n0": false, "HCxx6h44": false, "1DXEgWNt": false, "0KlLlRry": false, "3NRMqrJ8": false, "Cad2cGsp": false, "vQghq5bh": false, "6WtASqDw": false, "iLLXp92w": false, "V5ZGyDsA": false, "SjqEMhMx": false, "9XWR5xsS": false, "tSldiFEe": false, "zY6YryI3": false, "SC40R5o4": false, "8DV23UsC": false, "C4FuMQcn": false, "rPH6qaHd": false, "sguJsWv3": false, "2P3RPk7S": false, "H82qLbLY": false, "fH0HUk6S": false, "zzpjBsto": false, "zDo3p1QO": false, "MQgv1M3O": false, "ioWE3O6I": false, "QoFUYOlK": false, "JAUoambb": false, "3fqqRaU6": false, "GSz1BrxV": false, "zz9jsS4D": false, "DMTrWbI6": false, "HAIIB50m": false, "aM3Bgt41": false, "c5aVj6Ap": false, "bxRIMezS": false, "KuafuSvx": false, "N6Fo3vFp": false, "y4qdMrZ0": false, "CR4SllYC": false, "IF9FMDLy": false, "1NJnwkal": false, "cfbJyLKv": false, "3RwWF3mb": false, "L120EOiw": false, "P6NuwMdw": false, "UETZwiYv": false, "cYoVZqkK": false, "3DdNWTzb": false, "b3Dj9M98": false, "3S1sprsV": false, "GAK04iJm": false, "Pg6QWZQI": false, "7J4S97mF": false, "o3mCVxbd": false, "12btJFgD": false, "94n6zoNh": false, "wTnC8w7C": false, "eBieF8U4": false, "SCZRgi7B": false, "7BCKFdN0": false, "ISwqRNyu": false, "PHYvf0ah": false, "M7o5LssI": false, "KXM5Pvn0": false, "YoNxVKgN": false, "g1082k1H": false, "vyDof8lh": false, "mo7SDOmr": false, "tyoAkVdb": false, "cH1Ns2Jw": false, "qiCdNqZd": false, "0WqoWyPf": false, "5UoGozde": false, "1MBz4Ukp": false, "1b3ypPKF": false, "bBRws9rO": false, "IWYxWjws": false, "dm7AXPit": false, "libmZlt7": false, "E9Sqe89j": false, "zOEBVD30": false, "lu6cheou": false, "K6Xu3kmL": false, "AbvLmLTq": false, "buR381kq": false, "nq6UuXW7": false, "DZYrsBhf": false, "Z9hVv9vY": false, "EAyKZM4L": false, "WR3U2E80": false, "ruJh4wMB": false, "nedkUfJ0": false, "bDG4pgrB": false, "WztQNa6F": false, "8YlCp8D9": false, "mzUWTquG": false, "PeczGnwu": false, "jX3Z1PSc": false, "BShKcpr2": false, "6qNZdGLO": false, "g7PXDgVZ": false, "Pehwnx0F": false, "nptEBPel": false, "vHQD4xpO": false, "4mMypeZl": false, "v3Bvd2A3": false, "wX6Ji1P9": false, "W8f6joFg": false, "h3CEwWuc": false, "mmDYKdRp": false, "8z8U3aY9": false, "LqH3v6nn": false, "NUW5XBAs": false, "hJHnHJtp": false, "hri9vKdW": false, "wZnOoavt": false, "BADTaglM": false, "rbl0KCJp": false, "gG7HzzgX": false, "SKANgg6k": false, "OWeEf3gC": false, "TosZeiw9": false, "Pvs8Ebl0": false, "ctdBXl9C": false, "8euz8lpC": false, "8EMqpy0q": false, "P9vNBoUh": false, "TTB1tjbC": false, "Tr9znzs6": false, "ct8GRCZ2": false, "UknP04e3": false, "CgBNY0pQ": false, "RPA482iN": false, "00HRhR0u": false, "12YAEb2p": false, "gULXme8u": false, "GR2GSTTb": false, "M5aXY60b": false, "lJPXLOoP": false, "KkLdcEV1": false, "s1uyjP0R": false, "i6hnuDTh": false, "7mEmw0eV": false, "Dz2PE84b": false, "tBp7uhmP": false, "9HkMyHb4": false, "YwtWzeHw": false, "gKc7bqvD": false, "bcNq2Wlv": false, "BOzDCFTZ": false, "PfrKA6TF": false, "oclu4qiQ": false, "Qx5e81HQ": false, "macxKHDg": false, "xWzbOXVz": false, "QDrCfCwR": false, "ZYle8GlE": false, "u9jeMpxC": false, "bpNPreHr": false, "FTjUxkLA": false, "E2adSAQM": false, "LUiJxQIr": false, "bDikEvS1": false, "E8EKA7gW": false, "nzVmcqca": false, "Lyhnwwjj": false, "kg85tGSe": false, "aZoyd0B0": false, "Syu8slsT": false, "Zg9rzPEL": false, "SJOsePW7": false, "U8JXKfGs": false, "4kAvNMhG": false, "XKui2gRf": false, "6HuVJ2Gv": false, "yVGKMMlF": false, "b8r1kmd7": false, "iB2TmZiu": false, "cEefvc20": false, "4a72xYs9": false, "DtL7Pc8G": false, "OB1XaQrr": false, "ahmzJ59P": false, "InTvKzMK": false, "5wPZvDjJ": false, "jlrr9L2v": false, "wmec66zT": false, "pTDTDivp": false, "igRCmy4L": false, "777mT3LQ": false, "jIkleylQ": false, "AbsxGnSb": false, "SLzso4eE": false, "296Mo2OA": false, "ZAVmY7df": false, "9pjQ5c6R": false, "6o60Bb0d": false, "JxBMXHfk": false, "sd62jMKi": false, "nN3pU6w3": false, "aCKtvbDy": false, "01SBSjIa": false, "kyjHCLpr": false, "hV35q2jo": false, "hxBI2DKk": false, "9QZwYVra": false, "HV8ipk7z": false, "5mzMnIWh": false, "rROzVdxw": false, "XDgSik3R": false, "qJb5Tg9b": false, "ozKiNWKB": false, "0oN87Dv8": false, "qPmYhfXi": false, "TZihFaY2": false, "ESj6S5iM": false, "12IUmd53": false, "xKdlbof8": false, "9KGTggrR": false, "WYVaCmY7": false, "XvuMfc5K": false, "5O36NvVY": false, "PcQltobG": false, "qBRafiZJ": false, "5aoIwgqK": false, "G1Y4V4Vk": false, "jTknLIGK": false, "RIFBlIQb": false, "JsWFopmd": false, "snhbB7Ap": false, "uRgu4nhy": false, "mWmOEdWu": false, "nc4slu3m": false, "bTwHq4E5": false, "kPIBYxRG": false, "rT4dnS0M": false, "CHRVC91V": false, "9H0i4YYw": false, "1l8Qiw8P": false, "EaKrtC6p": false, "U2N9SNlF": false, "IX14kbQF": false, "wmMnqczs": false, "UpcHgnwN": false, "WphDaPlP": false, "qGSZAINR": false, "8xEVM10w": false, "sd6Hr4nq": false, "gRtsW3Bs": false, "mGgAKswS": false, "n2TttrOC": false, "xWWW9D4x": false, "fhorVj4K": false, "fJYEGEYW": false, "2w7qnBrx": false, "0dNA31sU": false, "9jOEsKZS": false, "PIcAfXoZ": false, "W2vbjuez": false, "1EXBQjul": false, "6F5XGla7": false, "nUbzGlqf": false, "0sIhpHhO": false, "hdFZYdUE": false, "kLd9T16W": false, "C8UGsGwa": false, "hDmCX5B3": false, "jfRQshy1": false, "sXHhyrI7": false, "XIo3EjkB": false, "ipPA6WLp": false, "KI6Dj8go": false, "FenrTEeO": false, "uYFHatE0": false, "IYlL2gAE": false, "m4cqrdrQ": false, "p4uJGdxA": false, "8lViAtYg": false, "E3iDB7RN": false, "PtwJFRe3": false, "W158miBd": false, "OcdbDCn6": false, "ONcRYVM5": false, "xNmMgarF": false, "yovu19ak": false, "5JOYfohI": false, "WYT5LP2f": false, "1jX63ZMu": false, "bVoQjEMU": false, "iaxaMcpM": false, "BjoG8GUF": false, "h7YRYGdT": false, "hUqdSGgY": false, "Roc5Lj5b": false, "zs2psDpJ": false, "jKVH1z1Z": false, "N8IQzbYa": false, "QAaDJkWA": false, "GzRRoD08": false, "liXUo1fd": false, "TgJ7Iewr": false, "fAQhaOu8": false, "cHVXBbfu": false, "QnloSOoD": false, "XrCrEqSM": false, "BaORumxX": false};
+
+    function checkToken() {
+      const input = document.getElementById("token-input").value.trim().toUpperCase();
+      const errorEl = document.getElementById("error");
+
+      console.log("Input:", input);
+      console.log("Tokens disponibles:", Object.keys(TOKENS).length);
+
+      if (!(input in TOKENS)) {
+        errorEl.textContent = "Código incorrecto.";
+        console.log("Código no encontrado en:", Object.keys(TOKENS).slice(0, 10));
+        return;
+      }
+
+      const usedKey = "used_" + input;
+      if (localStorage.getItem(usedKey)) {
+        showUsed();
+        return;
+      }
+
+      localStorage.setItem(usedKey, "1");
+      showGame();
+    }
+
+    function showUsed() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("used-screen").style.display = "block";
+    }
+
+    function showGame() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("game-container").style.display = "block";
+    }
+
+    document.getElementById("token-input").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") checkToken();
+    });
+  </script>
+
+</body>
+</html>
+
